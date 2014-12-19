@@ -65,6 +65,13 @@ describe('user to project', function(){
         'project_name': 'car'
       })
       .then(function(model){
+        var myUser = collections.ProjectCollection
+          .query('where', 'username', '=', 'door')
+          .fetch();
+        var myRelation = collections.ProjectCollection
+          .query('where', 'project_name', '=', 'car')
+          .fetch();
+        myUser.attach
         return collections.ProjectCollection
           .query('where', 'project_name', '=', 'car')
           .fetch();
