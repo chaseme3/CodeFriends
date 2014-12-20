@@ -18,18 +18,35 @@
           url: '/login'
         })
         .state('home', {
-          templateUrl: '/app/home/home.html',
-          url: '/home'
+          url: '/home',
+          views: {
+            '': { templateUrl: '/app/home/home.html' },
+            'projects@home': {
+              templateUrl: '/app/home/projects/projects.html',
+              controller: 'projectsController'
+            },
+            'friends@home': {
+              template: '<p>Friends data here<p>'
+              // these files do not exist yet
+              // templateUrl: '/app/home/friends/friends.html',
+              // controller: '/app/home/friends/friends.js'
+            }
+          }
         })
-        .state('home.projectsView', {
-          templateUrl: '/app/home/projects/projects.html',
-          controller: 'projectsController',
-          url: '/projects'
-        })
-        .state('editor', {
+        .state('projectEditor', {
           url: '/editor',
-          controller: 'editorController',
-          templateUrl: '/app/editor/editor.html'
+          views: {
+            '': { templateUrl: '/app/projectEditor/projectEditor.html'},
+            'chat@projectEditor': {
+              // templateUrl: '/app/projectEditor/chat/chat.html'
+              template: '<p>chat</p>'
+              // controller: '/app/projectEditor/chat/chat.js'
+            },
+            'editor@projectEditor': {
+              templateUrl: '/app/projectEditor/editor/editor.html',
+              controller: 'editorController'
+            }
+          }
         });
     });
 })();
