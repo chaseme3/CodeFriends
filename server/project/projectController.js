@@ -22,13 +22,12 @@ projectController.getAllProjects = function (req, res) {
 //   createdAt: 'Tue, 16 Dec 2014 00:58:17 GMT'
 // }]);
 
-projectController.getProject = function (req, res) {
-  //dummy data
-  res.json({
-    indexhtml: 'htmlcodehtmlcode'
-  });
-};
-
+// projectController.getProject = function (req, res) {
+//   //dummy data
+//   res.json({
+//     indexhtml: 'htmlcodehtmlcode'
+//   });
+// };
 projectController.post = function (req, res) {
   res.status(200).end();
 };

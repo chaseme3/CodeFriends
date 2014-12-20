@@ -28,12 +28,8 @@
     "chai": "^1.10.0",
     "gulp": "^3.8.10",
     "should": "^4.4.1",
-<<<<<<< HEAD
-    "supertest": "^0.15.0"
-=======
     "supertest": "^0.15.0",
     "mysql": "^2.5.4"
->>>>>>> Add tests for DB
   },
   "dependencies": {
     "bluebird": "^2.4.0",
@@ -55,6 +51,7 @@
     "passport": "^0.2.1",
     "passport-github": "^0.1.5",
     "path": "^0.4.9",
+    "request": "^2.51.0",
     "share": "^0.7.3",
     "share-codemirror": "^0.1.0",
     "stream": "0.0.2",
