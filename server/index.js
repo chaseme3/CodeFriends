@@ -1,7 +1,6 @@
 //dependencies
 var bodyParser = require('body-parser'),
-  << << << < HEAD
-path = require('path'),
+  path = require('path'),
   morgan = require('morgan'),
   marked = require('marked'),
   session = require('express-session'),
