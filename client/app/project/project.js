@@ -6,17 +6,22 @@ angular.module('code.project', ['ui.router'])
     Auth.isLoggedIn();
     console.log('Project Name: ', $stateParams.projectName);
     $scope.files = [];
+
     $scope.getAllFiles = function () {
       return $http.get('/api/project/' + $stateParams.projectName)
         .then(function (res) {
           $scope.files = res.data.files;
+          console.log('$scope.files!!', $scope.files);
           return $scope.files;
         });
     };
+
     $scope.goToHome = function () {
       $state.go('home');
     };
+
     $scope.addNewFile = function () {
+
       return $http.post('/api/file', {
           file_name: $scope.newFileName,
           project_name: $stateParams.projectName,
@@ -28,5 +33,6 @@ angular.module('code.project', ['ui.router'])
           return $scope.getAllFiles();
         });
     };
+
     $scope.getAllFiles();
   });

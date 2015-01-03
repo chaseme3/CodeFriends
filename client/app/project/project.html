@@ -6,8 +6,18 @@
   <div class="col-md-2 col-sm-3">
     <form ng-submit='addNewFile()'>
       <input type='text' ng-model='newFileName' name="text" placeholder='New File Name'>
-      <input type='submit' id='submit' value='Create'>
+      <input type='submit' id='submit' value='Create File'>
     </form>
+
+    <div ng-controller="uploadsController">
+      <form class='half-form'>
+        <input type="submit" ng-model="files" ng-file-select="onFileSelect(files)" ng-multiple="true" class="app-prompt-upload" value="Upload Files"/>
+        <!-- <div ng-show="imageNamesToDisplay" ng-repeat="imageNameToDisplay in imageNamesToDisplay">
+          <img class="post-thumbnail" src="{{imageNameToDisplay}}"/>
+        </div> -->
+      </form>
+    </div>
+
     <p ng-repeat="file in files"><a ui-sref='document({documentName: file.name})'>File: {{ file.name }}</a></p>
   </div>
 

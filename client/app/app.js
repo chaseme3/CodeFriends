@@ -4,6 +4,7 @@
 (function () {
   angular.module('code', [
       'ui.router',
+      'angularFileUpload',
       'code.userBox',
       'code.landing',
       'code.home',
@@ -11,11 +12,13 @@
       'code.project',
       'code.projects',
       'code.toolbar',
+      'code.uploads',
       'code.document',
       'code.services',
       'code.chat',
       'code.mainHeaderDirective',
       'ngSocket'
+
     ])
     .config(function ($stateProvider, $urlRouterProvider) {
       $urlRouterProvider.otherwise('/');
