@@ -26,7 +26,6 @@ passport.use(new GitHubStrategy({
     callbackURL: 'http://' + config.get('url') + ':' + config.get('ports').http + '/auth/login/callback'
   },
   function (accessToken, refreshToken, profile, done) {
-    console.log(profile);
     // I'm not exactly sure when we use an accessToken and a refreshToken
     if (accessToken !== null) {
       new UserCollection()
