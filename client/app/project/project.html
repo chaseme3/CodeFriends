@@ -18,7 +18,10 @@
       </form>
     </div>
 
-    <p ng-repeat="file in files"><a ui-sref='document({documentName: file.name})'>File: {{ file.name }}</a></p>
+    <p ng-repeat="file in files">
+      <a ui-sref='document({documentName: file.name})'>File: {{ file.name }}</a>
+      <a href='/api/file/download/projectId/{{ projectId }}/docment-name/{{ file.name }}'>Download</a>
+    </p>
   </div>
 
   <div class="padContainer col-md-8 col-sm-6" ui-view></div>
