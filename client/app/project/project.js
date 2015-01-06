@@ -3,7 +3,6 @@
 'use strict';
 angular.module('code.project', ['ui.router'])
   .controller('projectController', function ($scope, $state, $stateParams, $http, Auth) {
-    Auth.isLoggedIn();
     console.log('Project Name: ', $stateParams.projectName);
     $scope.files = [];
     $scope.currentProjectId = null;
@@ -17,6 +16,9 @@ angular.module('code.project', ['ui.router'])
           $scope.files = res.data.files;
           console.log('$scope.files!!', $scope.files);
           return $scope.files;
+        })
+        .catch(function (err) {
+          console.log('COULD NOT GET SINGLE PROJECT', err);
         });
     };
 

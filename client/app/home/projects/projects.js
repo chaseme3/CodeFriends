@@ -1,4 +1,4 @@
-/*global angular:true */
+/*global angular:true, moment:true */
 angular.module('code.projects', ['ui.router'])
   .controller('projectsController', function ($scope, $state, $http, Projects, chatFactory) {
 
@@ -9,10 +9,9 @@ angular.module('code.projects', ['ui.router'])
         $scope.projects = res;
 
         angular.forEach($scope.projects, function (theProject) {
-          console.log(theProject);
           theProject.createString = moment(theProject.created_at).format("dddd, MMMM Do YYYY");
           theProject.updateString = moment(theProject.updated_at).format("dddd, MMMM Do YYYY, h:mm:ss a");
-        })
+        });
       });
 
     };

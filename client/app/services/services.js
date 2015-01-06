@@ -11,10 +11,8 @@ angular.module('code.services', [])
     projects.userProjects = null;
 
     projects.getProjects = function (cb) {
-      console.log('ENTERED GET PROJECTS !!!!!!!!');
       $http.get('api/project/')
         .then(function (res) {
-          console.log(res.data);
           this.userProjects = res.data;
           cb(res.data);
         });
@@ -26,7 +24,6 @@ angular.module('code.services', [])
       isLoggedIn: function (redirectToLogin) {
         return $http.get('/auth/user')
           .then(function (res) {
-            console.log(res);
             Auth.userId = res.data.userId;
             Auth.userName = res.data.userName;
             if (res.data.userId === null && redirectToLogin !== false) {
