@@ -20,7 +20,7 @@
 
     <p ng-repeat="file in files">
       <a ui-sref='document({documentName: file.name})'>File: {{ file.name }}</a>
-      <!-- <a href='/api/download/projectId/{{ currentProjectId }}/fileName/{{ file.name }}'>Download</a> -->
+      <a href='/api/download/projectId/{{ currentProjectId }}/fileName/{{ file.name }}'>Download</a>
     </p>
   </div>
 
