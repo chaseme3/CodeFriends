@@ -10,8 +10,9 @@ angular.module('code.project', ['ui.router'])
       console.log('$stateParams: ', $stateParams);
       return $http.get('/api/project/' + $stateParams.projectName)
         .then(function (res) {
-          $scope.currentProjectId = res.data.id;
-          console.log('$scope.currentProjectId: ', $scope.currentProjectId);
+          console.log('res.data', res.data);
+          $scope.currentProjectName = res.data.project_name; //change eventually to project id
+          console.log('$scope.currentProjectName: ', $scope.currentProjectName);
           console.log('res: ', res);
           $scope.files = res.data.files;
           console.log('$scope.files!!', $scope.files);
