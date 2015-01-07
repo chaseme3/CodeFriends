@@ -223,7 +223,27 @@ var fileController = {
     };
     getPaths(fileStructure.files);
     return paths;
+  },
+  moveFileInProject: function (projectId, projectName, oldPath, newPath) {
+    return fileController.getFileStructure(projectId, projectName)
+      .then(function (fileStructure) {
+        //parse oldPath and convert to object notation
+        //delete property from the fileStructure object
+        //return the new fileStructure
+      })
+      .then(function (newFileStructure) {
+        //parse new path and convert to object notation
+        //pass into function below
+        // fileController._appendToFileStructure();
+      })
+      //update file name in liveDB so that the name has the new path 
+      .then(function () {
+        //save file contents in a variable
+        //use oldPath to delete the old file at the old path
+        //use the new path to save the file contents at the new path
+      });
   }
+
 };
 
 module.exports = fileController;
