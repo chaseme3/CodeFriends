@@ -209,6 +209,7 @@ angular.module('code.services', [])
     var files = {};
 
     files.getAllFiles = function (projectName) {
+      console.log('hi chase');
       return $http.get('/api/project/' + projectName)
         .then(function (res) {
           files.files = res.data.files;
