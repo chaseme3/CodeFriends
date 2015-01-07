@@ -34,6 +34,7 @@ angular.module('code.project', ['ui.router'])
     $scope.getAllFiles = function () {
       return $http.get('/api/project/' + $stateParams.projectName)
         .then(function (res) {
+          console.log('res: ', res);
           $scope.currentProjectId = res.data.id;
           $scope.files = res.data.files;
           console.log('$scope.files!!', $scope.files);
