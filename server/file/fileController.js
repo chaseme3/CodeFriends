@@ -234,27 +234,30 @@ var fileController = {
     return paths;
   },
 
-  // moveFileInProject: function (projectIdOrName, oldPath, newPath) {
+  moveFileInProject: function (req, res) {
 
-  //   return fileController.getFileStructure(projectIdOrName)
-  //     .then(function (fileStructure) {
-  //       oldPath.split('/');
-  //       //check if old path exists using existing function
-  //       //delete property from the fileStructure object
-  //       //return the new fileStructure
-  //     })
-  //     .then(function (newFileStructure) {
-  //       //parse new path and convert to object notation
-  //       //pass into function below
-  //       // fileController._appendToFileStructure();
-  //     })
-  //     //update file name in liveDB so that the name has the new path 
-  //     .then(function () {
-  //       //save file contents in a variable
-  //       //use oldPath to delete the old file at the old path
-  //       //use the new path to save the file contents at the new path
-  //     });
-  // }
+    // function (projectIdOrName, oldPath, newPath) {
+    var fileInfo = req.body;
+    return fileController.getFileStructure(fileInfo.projectIdOrName)
+      .then(function (fileStructure) {
+        var oldPath = fileInfo.path.split('/');
+        console.log('oldPath: ', oldPath);
+        // check if old path exists using existing function
+        // delete property from the fileStructure object
+        // return the new fileStructure
+        // })
+        // .then(function (newFileStructure) {
+        //parse new path and convert to object notation
+        //pass into function below
+        // fileController._appendToFileStructure();
+        // })
+        //update file name in liveDB so that the name has the new path 
+        // .then(function () {
+        //save file contents in a variable
+        //use oldPath to delete the old file at the old path
+        //use the new path to save the file contents at the new path
+      });
+  }
 };
 
 module.exports = fileController;

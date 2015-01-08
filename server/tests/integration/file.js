@@ -233,27 +233,27 @@ describe('File', function () {
       });
   });
 
-  // it('move a project in the database on POST /api/', function (done) {
-  //   agent
-  //     .put('/api/file/move/')
-  //     .send({
-  //       projectId: 'blah',
-  //       projectName: 'blahblah',
-  //       type: 'file',
-  //       path: 'blahblahblahblah',
-  //       newPath: 'blahblahblahblahblah'
-  //     })
-  //     .expect(200)
-  //     .end(function (err, res) {
-  //       if (err) {
-  //         console.log('Error moving file: ', err);
-  //       }
-  //       var file = res.body;
-  //       file.should.be.instanceof(Object);
-  //       file.should.have.property('id');
-  //       file.should.have.property('file_name');
-  //       done();
-  //     });
-  // });
+  it('move a project in the database on PUT /api/file/moveFolder', function (done) {
+    agent
+      .put('/api/file/moveFolder')
+      .send({
+        projectIdOrName: 'blah',
+        projectName: 'blahblah',
+        type: 'file',
+        path: 'blah/blah/blahblah',
+        newPath: 'blahblahblahblahblah'
+      })
+      .expect(200)
+      .end(function (err, res) {
+        if (err) {
+          console.log('Error moving file: ', err);
+        }
+        var file = res.body;
+        // file.should.be.instanceof(Object);
+        // file.should.have.property('id');
+        // file.should.have.property('file_name');
+        done();
+      });
+  });
 
 });
