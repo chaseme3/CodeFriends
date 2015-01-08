@@ -324,6 +324,116 @@ var obj1 = {
     }
 }
 
+var obj1 = {
+    fileStructure:  {
+        _id: '54adfd09936bc2112ddbfe88',
+        project_id: 5,
+        files: { 
+            mainjs: { 
+                name: 'main.js',
+                created: '2015-01-07T19:01:04-08:00',
+                author: null,
+                type: 'file',
+                path: '//main.js' 
+            },
+            exampleFolder: { 
+                name: 'exampleFolder',
+                created: '2015-01-07T19:01:12-08:00',
+                author: null,
+                type: 'folder',
+                path: '/example',
+                files: { 
+                    carjs: { 
+                        name: 'main.js',
+                        created: '2015-01-07T19:01:04-08:00',
+                        author: null,
+                        type: 'file',
+                        path: '//main.js' 
+                    },
+                    cowFolder: { 
+                        name: 'cowFolder',
+                        created: '2015-01-07T19:01:12-08:00',
+                        author: null,
+                        type: 'folder',
+                        path: '/example',
+                        files: {
+                            cowjs: { 
+                                name: 'cow.js',
+                                created: '2015-01-07T19:01:04-08:00',
+                                author: null,
+                                type: 'file',
+                                path: '//main.js'
+                            }
+                        }
+                    }
+                }
+            },
+            dummyForTest2js: { 
+                name: 'dummyForTest2.js',
+                created: '2015-01-07T19:01:39-08:00',
+                author: 4,
+                type: 'file',
+                path: '/dummyForTest2.js' 
+            } 
+        }
+    }
+}
+
+// var obj1 = {
+//     fileStructure:  {
+//         _id: '54adfd09936bc2112ddbfe88',
+//         project_id: 5,
+//         files: { 
+//             mainjs: { 
+//                 name: 'main.js',
+//                 created: '2015-01-07T19:01:04-08:00',
+//                 author: null,
+//                 type: 'file',
+//                 path: '//main.js' 
+//             },
+//             exampleFolder: { 
+//                 name: 'exampleFolder',
+//                 created: '2015-01-07T19:01:12-08:00',
+//                 author: null,
+//                 type: 'folder',
+//                 path: '/example',
+//                 files: { 
+//                     carjs: { 
+//                         name: 'main.js',
+//                         created: '2015-01-07T19:01:04-08:00',
+//                         author: null,
+//                         type: 'file',
+//                         path: '//main.js' 
+//                     },
+//                     cowFolder: { 
+//                         name: 'cowFolder',
+//                         created: '2015-01-07T19:01:12-08:00',
+//                         author: null,
+//                         type: 'folder',
+//                         path: '/example',
+//                         files: {
+//                             cowjs: { 
+//                                 name: 'cow.js',
+//                                 created: '2015-01-07T19:01:04-08:00',
+//                                 author: null,
+//                                 type: 'file',
+//                                 path: '//main.js'
+//                             }
+//                         }
+//                     }
+//                 }
+//             },
+//             dummyForTest2js: { 
+//                 name: 'dummyForTest2.js',
+//                 created: '2015-01-07T19:01:39-08:00',
+//                 author: 4,
+//                 type: 'file',
+//                 path: '/dummyForTest2.js' 
+//             } 
+//         }
+//     }
+// }
+
 // var url1 = 'exampleFolder/cowFolder/cowjs';
 // var url2 = 'exampleFolder/cowjs';
 
@@ -340,6 +450,7 @@ var obj1 = {
 
 //         if(round === totalRounds){
 //             var objKey = oldUrlArray[index];
+//             storageForFileToMove = obj.files[objKey];
 //             delete obj.files[objKey];
 //             return;
 //         }        
@@ -364,7 +475,9 @@ var obj1 = {
 //         if(round === totalRounds){
 //             var objKey = urlArray[index];
 //             console.log('obj in base case of addProperty: ', obj);
-//             delete obj.files[objKey];
+//             console.log('objKey: ', objKey);
+//             console.log('property we are adding: ', storageForFileToMove);
+//             obj.files[objKey] = storageForFileToMove;
 //             return;
 //         }
 
