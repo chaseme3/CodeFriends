@@ -252,11 +252,11 @@ var fileController = {
       })
 
     // delete property from the fileStructure object
-    // return the new fileStructure
+    //save the updated object as a variable
+    //delete the old file structure and add the new one/ or just edit it or whatever it lets you do
     // })
     // .then(function (newFileStructure) {
     //parse new path and convert to object notation
-    //pass into function below
     // fileController._appendToFileStructure();
     // })
     //update file name in liveDB so that the name has the new path 
