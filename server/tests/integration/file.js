@@ -43,6 +43,7 @@ describe('File', function () {
         project_name: project_name,
         file_name: 'main.js',
         type: 'file',
+        path: '/'
       })
       .expect(201)
       .then(function (res) {
@@ -62,6 +63,7 @@ describe('File', function () {
         project_name: project_name,
         file_name: 'main.js',
         type: 'file',
+        path: '/'
       })
       .expect(400)
       .then(function () {
@@ -180,6 +182,7 @@ describe('File', function () {
       .field('file_name', 'dummyForTest2.js')
       .field('project_name', project_name)
       .field('path', '')
+      .field('type', 'file')
       .attach('testFile', './server/tests/test-files/dummyForTest.js')
       .expect(201)
       .then(function (res) {
@@ -230,6 +233,27 @@ describe('File', function () {
       });
   });
 
-
+  // it('move a project in the database on POST /api/', function (done) {
+  //   agent
+  //     .put('/api/file/move/')
+  //     .send({
+  //       projectId: 'blah',
+  //       projectName: 'blahblah',
+  //       type: 'file',
+  //       path: 'blahblahblahblah',
+  //       newPath: 'blahblahblahblahblah'
+  //     })
+  //     .expect(200)
+  //     .end(function (err, res) {
+  //       if (err) {
+  //         console.log('Error moving file: ', err);
+  //       }
+  //       var file = res.body;
+  //       file.should.be.instanceof(Object);
+  //       file.should.have.property('id');
+  //       file.should.have.property('file_name');
+  //       done();
+  //     });
+  // });
 
 });
