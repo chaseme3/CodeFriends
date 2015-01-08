@@ -23,6 +23,7 @@ describe('Upload', function () {
       .field('file_name', 'dummyForTest3.js')
       .field('project_name', 'basketball')
       .field('path', '')
+      .field('type', 'file')
       .attach('testFile', './server/tests/integration/dummyForTest.js')
       .then(function (res) {
         expect(res.status).to.equal(200); // 'success' status

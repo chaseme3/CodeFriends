@@ -13,8 +13,8 @@ var mongoIndex = function (str) {
 };
 
 var fileController = {
+
   createNewFileOrFolder: function (req, res) {
-    console.log('createNewFileOrFolder');
     var projectName = req.body.project_name || req.param('project_name');
     var fileName = req.body.file_name || req.param('file_name');
     var type = req.body.type || req.param('type');
@@ -38,12 +38,14 @@ var fileController = {
         return res.status(400).send(err.toString()).end();
       });
   },
+
   _createNewFileOrFolder: function (fileInfo) {
     var projectName = fileInfo.projectName;
     var fileName = fileInfo.fileName;
     var type = fileInfo.type;
     var projectId = fileInfo.projectId || null;
     var path = fileInfo.path;
+    // var projectIdOrName = fileInfo.projectIdOrName;
     var userId = fileInfo.userId || null;
     return new Q()
       .then(function () {
@@ -53,7 +55,7 @@ var fileController = {
         }
       })
       .then(function () {
-        return fileController.getFileStructure(projectId, projectName);
+        return fileController.getFileStructure(projectName);
       })
       .then(function (fileStructure) {
         // Check if path exists
@@ -66,7 +68,8 @@ var fileController = {
           created: moment().format(config.get('timeFormat')),
           author: userId,
           type: type,
-          path: path + '/' + fileName
+          path: path + '/' + fileName,
+          // projectIdOrName: projectIdOrName
         };
         if (type === 'folder') {
           newAddition.files = {};
@@ -104,9 +107,11 @@ var fileController = {
           });
       });
   },
+
   _isValidFileName: function (fileName) {
     return !(/\s/g.test(fileName) || /\//g.test(fileName));
   },
+
   _appendToFileStructure: function (fileStructure, path, fileName, newAddition) {
     fileController._getSubFileStructure(fileStructure, path, function (subFileStructure) {
       if (!fileController._isFileInFileStructre(subFileStructure)) {
@@ -115,6 +120,7 @@ var fileController = {
     });
     return fileStructure;
   },
+
   _getSubFileStructure: function (fileStructure, path, cb) {
     var _path = path.split('/').filter(function (str) {
       return str.length > 0;
@@ -150,31 +156,31 @@ var fileController = {
     });
     return isValidPath;
   },
+
   _isFileInFileStructre: function (fileStructure, fileName) {
     return _.any(fileStructure.files, function (file) {
       return file.name === fileName;
     });
   },
+
   get: function (req, res) {
     var project_name = req.body.project_name;
-    return fileController.getFileStructure(null, project_name)
+    return fileController.getFileStructure(project_name)
       .then(function (fileStructure) {
         return res.json(fileStructure);
       });
   },
-  getFileStructure: function (projectId, projectName) {
+
+  getFileStructure: function (projectIdOrName) {
     return new Q().then(function () {
-        if (projectId !== null && projectId !== undefined) { // If project ID
-          // Check if project ID exists
+        if (typeof projectIdOrName === 'number') {
           return ProjectCollection
-            .query('where', 'id', '=', projectId)
+            .query('where', 'id', '=', projectIdOrName)
             .fetchOne();
         }
-        // If project name
-        if (projectName !== null && projectName !== undefined) {
-          // Get project ID
+        if (typeof projectIdOrName === 'string') {
           return ProjectCollection
-            .query('where', 'project_name', '=', projectName)
+            .query('where', 'project_name', '=', projectIdOrName)
             .fetchOne();
         }
         throw new Error('No Project ID or name specified');
@@ -211,6 +217,7 @@ var fileController = {
           });
       });
   },
+
   getPathsForFileStructure: function (fileStructure) {
     var paths = [];
     var getPaths = function (_fileStructure) {
@@ -224,26 +231,28 @@ var fileController = {
     getPaths(fileStructure.files);
     return paths;
   },
-  moveFileInProject: function (projectId, projectName, oldPath, newPath) {
-    return fileController.getFileStructure(projectId, projectName)
-      .then(function (fileStructure) {
-        //parse oldPath and convert to object notation
-        //delete property from the fileStructure object
-        //return the new fileStructure
-      })
-      .then(function (newFileStructure) {
-        //parse new path and convert to object notation
-        //pass into function below
-        // fileController._appendToFileStructure();
-      })
-      //update file name in liveDB so that the name has the new path 
-      .then(function () {
-        //save file contents in a variable
-        //use oldPath to delete the old file at the old path
-        //use the new path to save the file contents at the new path
-      });
-  }
 
+  // moveFileInProject: function (projectIdOrName, oldPath, newPath) {
+
+  //   return fileController.getFileStructure(projectIdOrName)
+  //     .then(function (fileStructure) {
+  //       oldPath.split('/');
+  //       //check if old path exists using existing function
+  //       //delete property from the fileStructure object
+  //       //return the new fileStructure
+  //     })
+  //     .then(function (newFileStructure) {
+  //       //parse new path and convert to object notation
+  //       //pass into function below
+  //       // fileController._appendToFileStructure();
+  //     })
+  //     //update file name in liveDB so that the name has the new path 
+  //     .then(function () {
+  //       //save file contents in a variable
+  //       //use oldPath to delete the old file at the old path
+  //       //use the new path to save the file contents at the new path
+  //     });
+  // }
 };
 
 module.exports = fileController;

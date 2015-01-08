@@ -39,8 +39,12 @@ describe('File', function () {
         project_name: project_name,
         file_name: 'main.js',
         type: 'file',
+        path: '/'
       })
       .end(function (err, res) {
+        if (err) {
+          console.log('Error adding a new file: ', err);
+        }
         var fileStructure = res.body;
         var fileKey = 'main.js'.replace('.', '');
         expect(fileStructure.files).to.be.a('object');
@@ -57,6 +61,7 @@ describe('File', function () {
         project_name: project_name,
         file_name: 'main.js',
         type: 'file',
+        path: '/'
       })
       .expect(400)
       .then(function () {
@@ -170,7 +175,8 @@ describe('File', function () {
       .post('/api/upload')
       .field('file_name', 'dummyForTest2.js')
       .field('project_name', project_name)
-      .field('path', '')
+      .field('path', '/')
+      .field('type', 'file')
       .attach('testFile', './server/tests/integration/dummyForTest.js')
       .then(function (res) {
         expect(res.status).to.equal(200); // 'success' status
@@ -191,4 +197,26 @@ describe('File', function () {
       });
   });
 
+  // it('move a project in the database on POST /api/', function (done) {
+  //   agent
+  //     .put('/api/file/move/')
+  //     .send({
+  //       projectId: 'blah',
+  //       projectName: 'blahblah',
+  //       type: 'file',
+  //       path: 'blahblahblahblah',
+  //       newPath: 'blahblahblahblahblah'
+  //     })
+  //     .expect(200)
+  //     .end(function (err, res) {
+  //       if (err) {
+  //         console.log('Error moving file: ', err);
+  //       }
+  //       var file = res.body;
+  //       file.should.be.instanceof(Object);
+  //       file.should.have.property('id');
+  //       file.should.have.property('file_name');
+  //       done();
+  //     });
+  // });
 });
