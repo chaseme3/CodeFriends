@@ -201,8 +201,7 @@ describe('File', function () {
     agent
       .put('/api/file/moveFolder')
       .send({
-        projectIdOrName: 'blah',
-        projectName: 'blahblah',
+        projectIdOrName: project_name,
         type: 'file',
         path: 'blah/blah/blahblah',
         newPath: 'blahblahblahblahblah'
