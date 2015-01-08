@@ -267,7 +267,6 @@ var fileController = {
 
 module.exports = fileController;
 
-//////EXAMPLE TO USE IN JSFIDDLE TO TRAVERSE THE FILE STRUCTURE
 // var obj1 = {
 //     fileStructure:  {
 //         _id: '54adfd09936bc2112ddbfe88',
@@ -335,7 +334,6 @@ module.exports = fileController;
 //         var totalRounds = urlArray.length;
 //         if(round == totalRounds - 1){
 //             var objKey = urlArray[index];
-//             console.log(objKey);
 //             delete obj.files[objKey];
 //             return;
 //         }
@@ -353,7 +351,7 @@ module.exports = fileController;
 //         deleteProperty(round + 1, urlArray, objToPass, index + 1);
 //     }
 //     deleteProperty(1, urlToArray, baseObject, 1);
+//     return object;
 // };
 
-// findObjectProperty(url1, obj1);
-// console.log(obj1);
+// console.log(findObjectProperty(url1, obj1));
