@@ -235,8 +235,6 @@ var fileController = {
   moveFileInProject: function (req, res) {
     var fileInfo = req.body;
     //do get request to get file content from sharejs and save it to a variable
-
-    // function (projectIdOrName, oldPath, newPath) {
     return fileController.getFileStructure(fileInfo.projectIdOrName)
       .then(function (fileStructure) {
         if (fileController._isPathValid(fileStructure, fileInfo.path)) {
@@ -244,138 +242,91 @@ var fileController = {
         }
       })
       .then(function (fileStructure) {
-        var oldPath = fileInfo.path.split('/');
-        console.log('oldPath: ', oldPath);
 
-      })
+      });
+  },
 
-    // delete property from the fileStructure object
-    //save the updated object as a variable
-    //delete the old file structure and add the new one/ or just edit it or whatever it lets you do
-    // })
-    // .then(function (newFileStructure) {
-    //parse new path and convert to object notation
-    // fileController._appendToFileStructure();
-    // })
-    //update file name in liveDB so that the name has the new path 
-    // .then(function () {
-    //save file contents in a variable
-    //use oldPath to delete the old file at the old path
-    //use the new path to save the file contents at the new path
+
+  moveObjectProperty: function (oldUrl, newUrl, object) {
+    console.log('object at beginning: ', object);
+
+    var oldUrlArray = oldUrl.split('/');
+    var newUrlArray = newUrl.split('/');
+    var baseObject = object.fileStructure.files[oldUrlArray[0]];
+    var storageForFileToMove;
+
+    var deleteProperty = function (round, urlArray, obj, index) {
+      var totalRounds = oldUrlArray.length - 1;
+
+      if (round === totalRounds) {
+        var objKey = oldUrlArray[index];
+        storageForFileToMove = obj.files[objKey];
+        delete obj.files[objKey];
+        return;
+      }
+      var objToPass;
+      var objKey = oldUrlArray[index];
+      if (obj.type === 'folder') {
+        var temp = obj.files;
+        objToPass = temp[objKey];
+      } else if (obj.type === 'file') {
+        objToPass = obj[objKey];
+      } else {
+        console.log('Error traversing file. Check if file path exists.');
+      }
+      deleteProperty(round + 1, urlArray, objToPass, index + 1);
+    };
+    deleteProperty(1, oldUrlArray, baseObject, 1);
+    console.log('object after deleting property: ', object);
+
+    var addProperty = function (round, urlArray, obj, index) {
+      var totalRounds = urlArray.length - 1;
+
+      if (round === totalRounds) {
+        var objKey = urlArray[index];
+        console.log('obj in base case of addProperty: ', obj);
+        console.log('objKey: ', objKey);
+        console.log('property we are adding: ', storageForFileToMove);
+        obj.files[objKey] = storageForFileToMove;
+        return;
+      }
+
+      var objToPass;
+      var objKey = urlArray[index];
+      if (obj.type === 'folder') {
+        var temp = obj.files;
+        objToPass = temp[objKey];
+      } else if (obj.type === 'file') {
+        objToPass = obj[objKey];
+      } else {
+        console.log('Error traversing file. Check if file path exists.');
+      }
+      addProperty(round + 1, urlArray, objToPass, index + 1);
+    };
+    addProperty(1, newUrlArray, baseObject, 1);
+    console.log('object after adding property: ', object);
+    return object;
   }
+
+
+
+  // delete property from the fileStructure object
+  //save the updated object as a variable
+  //delete the old file structure and add the new one/ or just edit it or whatever it lets you do
+  // })
+  // .then(function (newFileStructure) {
+  //parse new path and convert to object notation
+  // fileController._appendToFileStructure();
+  // })
+  //update file name in liveDB so that the name has the new path 
+  // .then(function () {
+  //save file contents in a variable
+  //use oldPath to delete the old file at the old path
+  //use the new path to save the file contents at the new path
 };
+}
 
 module.exports = fileController;
-
-var obj1 = {
-    fileStructure:  {
-        _id: '54adfd09936bc2112ddbfe88',
-        project_id: 5,
-        files: { 
-            mainjs: { 
-                name: 'main.js',
-                created: '2015-01-07T19:01:04-08:00',
-                author: null,
-                type: 'file',
-                path: '//main.js' 
-            },
-            exampleFolder: { 
-                name: 'exampleFolder',
-                created: '2015-01-07T19:01:12-08:00',
-                author: null,
-                type: 'folder',
-                path: '/example',
-                files: { 
-                    carjs: { 
-                        name: 'main.js',
-                        created: '2015-01-07T19:01:04-08:00',
-                        author: null,
-                        type: 'file',
-                        path: '//main.js' 
-                    },
-                    cowFolder: { 
-                        name: 'cowFolder',
-                        created: '2015-01-07T19:01:12-08:00',
-                        author: null,
-                        type: 'folder',
-                        path: '/example',
-                        files: {
-                            cowjs: { 
-                                name: 'cow.js',
-                                created: '2015-01-07T19:01:04-08:00',
-                                author: null,
-                                type: 'file',
-                                path: '//main.js'
-                            }
-                        }
-                    }
-                }
-            },
-            dummyForTest2js: { 
-                name: 'dummyForTest2.js',
-                created: '2015-01-07T19:01:39-08:00',
-                author: 4,
-                type: 'file',
-                path: '/dummyForTest2.js' 
-            } 
-        }
-    }
-}
-
-var obj1 = {
-    fileStructure:  {
-        _id: '54adfd09936bc2112ddbfe88',
-        project_id: 5,
-        files: { 
-            mainjs: { 
-                name: 'main.js',
-                created: '2015-01-07T19:01:04-08:00',
-                author: null,
-                type: 'file',
-                path: '//main.js' 
-            },
-            exampleFolder: { 
-                name: 'exampleFolder',
-                created: '2015-01-07T19:01:12-08:00',
-                author: null,
-                type: 'folder',
-                path: '/example',
-                files: { 
-                    carjs: { 
-                        name: 'main.js',
-                        created: '2015-01-07T19:01:04-08:00',
-                        author: null,
-                        type: 'file',
-                        path: '//main.js' 
-                    },
-                    cowFolder: { 
-                        name: 'cowFolder',
-                        created: '2015-01-07T19:01:12-08:00',
-                        author: null,
-                        type: 'folder',
-                        path: '/example',
-                        files: {
-                            cowjs: { 
-                                name: 'cow.js',
-                                created: '2015-01-07T19:01:04-08:00',
-                                author: null,
-                                type: 'file',
-                                path: '//main.js'
-                            }
-                        }
-                    }
-                }
-            },
-            dummyForTest2js: { 
-                name: 'dummyForTest2.js',
-                created: '2015-01-07T19:01:39-08:00',
-                author: 4,
-                type: 'file',
-                path: '/dummyForTest2.js' 
-            } 
-        }
-    }
-}
 
 // var obj1 = {
 //     fileStructure:  {
