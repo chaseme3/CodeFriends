@@ -269,82 +269,85 @@ var fileController = {
 
 module.exports = fileController;
 
-// var obj1 = {
-//     fileStructure:  {
-//         _id: '54adfd09936bc2112ddbfe88',
-//         project_id: 5,
-//         files: { 
-//             mainjs: { 
-//                 name: 'main.js',
-//                 created: '2015-01-07T19:01:04-08:00',
-//                 author: null,
-//                 type: 'file',
-//                 path: '//main.js' 
-//             },
-//             exampleFolder: { 
-//                 name: 'example',
-//                 created: '2015-01-07T19:01:12-08:00',
-//                 author: null,
-//                 type: 'folder',
-//                 path: '/example',
-//                 files: { 
-//                     carjs: { 
-//                         name: 'main.js',
-//                         created: '2015-01-07T19:01:04-08:00',
-//                         author: null,
-//                         type: 'file',
-//                         path: '//main.js' 
-//                     },
-//                     cowFolder: { 
-//                         name: 'example',
-//                         created: '2015-01-07T19:01:12-08:00',
-//                         author: null,
-//                         type: 'folder',
-//                         path: '/example',
-//                         files: {
-//                             cowjs: { 
-//                                 name: 'cow.js',
-//                                 created: '2015-01-07T19:01:04-08:00',
-//                                 author: null,
-//                                 type: 'file',
-//                                 path: '//main.js'
-//                             }
-//                         }
-//                     }
-//                 }
-//             },
-//             dummyForTest2js: { 
-//                 name: 'dummyForTest2.js',
-//                 created: '2015-01-07T19:01:39-08:00',
-//                 author: 4,
-//                 type: 'file',
-//                 path: '/dummyForTest2.js' 
-//             } 
-//         }
-//     }
-// }
+var obj1 = {
+    fileStructure:  {
+        _id: '54adfd09936bc2112ddbfe88',
+        project_id: 5,
+        files: { 
+            mainjs: { 
+                name: 'main.js',
+                created: '2015-01-07T19:01:04-08:00',
+                author: null,
+                type: 'file',
+                path: '//main.js' 
+            },
+            exampleFolder: { 
+                name: 'exampleFolder',
+                created: '2015-01-07T19:01:12-08:00',
+                author: null,
+                type: 'folder',
+                path: '/example',
+                files: { 
+                    carjs: { 
+                        name: 'main.js',
+                        created: '2015-01-07T19:01:04-08:00',
+                        author: null,
+                        type: 'file',
+                        path: '//main.js' 
+                    },
+                    cowFolder: { 
+                        name: 'cowFolder',
+                        created: '2015-01-07T19:01:12-08:00',
+                        author: null,
+                        type: 'folder',
+                        path: '/example',
+                        files: {
+                            cowjs: { 
+                                name: 'cow.js',
+                                created: '2015-01-07T19:01:04-08:00',
+                                author: null,
+                                type: 'file',
+                                path: '//main.js'
+                            }
+                        }
+                    }
+                }
+            },
+            dummyForTest2js: { 
+                name: 'dummyForTest2.js',
+                created: '2015-01-07T19:01:39-08:00',
+                author: 4,
+                type: 'file',
+                path: '/dummyForTest2.js' 
+            } 
+        }
+    }
+}
 
 // var url1 = 'exampleFolder/cowFolder/cowjs';
+// var url2 = 'exampleFolder/cowjs';
 
-// var findObjectProperty = function (url, object){
+// var moveObjectProperty = function (oldUrl, newUrl, object){
+//     console.log('object at beginning: ', object);
 
-//     var urlToArray =  url.split('/');
-//     var baseObject = object.fileStructure.files[urlToArray[0]];
+//     var oldUrlArray =  oldUrl.split('/');
+//     var newUrlArray =  newUrl.split('/');
+//     var baseObject = object.fileStructure.files[oldUrlArray[0]];
+//     var storageForFileToMove;
 
 //     var deleteProperty = function(round, urlArray, obj, index){
+//         var totalRounds = oldUrlArray.length -1;
 
-//         var totalRounds = urlArray.length;
-//         if(round == totalRounds - 1){
-//             var objKey = urlArray[index];
+//         if(round === totalRounds){
+//             var objKey = oldUrlArray[index];
 //             delete obj.files[objKey];
 //             return;
-//         }
+//         }        
 //         var objToPass;
-//         var objKey = urlArray[index];
+//         var objKey = oldUrlArray[index];
 //         if(obj.type === 'folder'){
 //             var temp = obj.files;
 //             objToPass = temp[objKey];
-//             console.log('objToPass', objToPass);
 //         }else if(obj.type === 'file'){
 //             objToPass = obj[objKey];    
 //         }else{
@@ -352,8 +355,35 @@ module.exports = fileController;
 //         }
 //         deleteProperty(round + 1, urlArray, objToPass, index + 1);
 //     }
-//     deleteProperty(1, urlToArray, baseObject, 1);
+//     deleteProperty(1, oldUrlArray, baseObject, 1);
+//     console.log('object after deleting property: ', object);
+
+//     var addProperty = function(round, urlArray, obj, index){
+//         var totalRounds = urlArray.length -1;
+
+//         if(round === totalRounds){
+//             var objKey = urlArray[index];
+//             console.log('obj in base case of addProperty: ', obj);
+//             delete obj.files[objKey];
+//             return;
+//         }
+
+//         var objToPass;
+//         var objKey = urlArray[index];
+//         if(obj.type === 'folder'){
+//             var temp = obj.files;
+//             objToPass = temp[objKey];
+//         }else if(obj.type === 'file'){
+//             objToPass = obj[objKey];    
+//         }else{
+//             console.log('Error traversing file. Check if file path exists.');
+//         }
+//         addProperty(round + 1, urlArray, objToPass, index + 1);
+//     }
+//     addProperty(1, newUrlArray, baseObject, 1);
+//     console.log('object after adding property: ', object);
 //     return object;
+
 // };
 
-// console.log(findObjectProperty(url1, obj1));
+// console.log(moveObjectProperty(url1, url2, obj1));
