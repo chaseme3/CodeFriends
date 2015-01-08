@@ -234,7 +234,8 @@ var fileController = {
 
   moveFileInProject: function (req, res) {
     var fileInfo = req.body;
-    //do get request to get file content from sharejs and save it to a variable
+    var fileContent;
+
     return fileController.getFileStructure(fileInfo.projectIdOrName)
       .then(function (fileStructure) {
         if (fileController._isPathValid(fileStructure, fileInfo.path)) {
@@ -242,8 +243,12 @@ var fileController = {
         }
       })
       .then(function (fileStructure) {
-
-      });
+        return fileController.moveObjectProperty(fileInfo.oldUrl, fileInfo.newUrl, fileStructure);
+      })
+      .then(function (newFileStructureToAdd) {
+        return fileController._updateFileStructure(newFileStructureToAdd);
+      })
+      .then()
   },
 
 
@@ -305,26 +310,11 @@ var fileController = {
     };
     addProperty(1, newUrlArray, baseObject, 1);
     console.log('object after adding property: ', object);
-    return object;
+
+    return object.fileStructure;
   }
 
-
-
-  // delete property from the fileStructure object
-  //save the updated object as a variable
-  //delete the old file structure and add the new one/ or just edit it or whatever it lets you do
-  // })
-  // .then(function (newFileStructure) {
-  //parse new path and convert to object notation
-  // fileController._appendToFileStructure();
-  // })
-  //update file name in liveDB so that the name has the new path 
-  // .then(function () {
-  //save file contents in a variable
-  //use oldPath to delete the old file at the old path
-  //use the new path to save the file contents at the new path
 };
-}
 
 module.exports = fileController;
 
