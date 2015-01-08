@@ -146,20 +146,20 @@ var fileController = {
    * @param <String> name of file
    * @return <Boolean>
    */
-  _isPathValid: function (fileStructure, path, fileName) {
-    if (path === '') return !fileController._isFileInFileStructre(fileStructure, fileName);
+  _isPathValid: function (fileStructure, filePath) {
+    if (filePath === '') return !fileController._isFileInFileStructre(fileStructure, filePath);
     var isValidPath = false;
-    fileController._getSubFileStructure(fileStructure, path, function (subFileStructure) {
-      if (!fileController._isFileInFileStructre(subFileStructure, fileName)) {
+    fileController._getSubFileStructure(fileStructure, filePath, function (subFileStructure) {
+      if (!fileController._isFileInFileStructre(subFileStructure, filePath)) {
         isValidPath = true;
       }
     });
     return isValidPath;
   },
 
-  _isFileInFileStructre: function (fileStructure, fileName) {
+  _isFileInFileStructre: function (fileStructure, filePath) {
     return _.any(fileStructure.files, function (file) {
-      return file.name === fileName;
+      return file.path === filePath;
     });
   },
 
@@ -235,29 +235,121 @@ var fileController = {
   },
 
   moveFileInProject: function (req, res) {
+    var fileInfo = req.body;
+    //do get request to get file content from sharejs and save it to a variable
 
     // function (projectIdOrName, oldPath, newPath) {
-    var fileInfo = req.body;
     return fileController.getFileStructure(fileInfo.projectIdOrName)
+      .then(function (fileStructure) {
+        if (fileController._isPathValid(fileStructure, fileInfo.path)) {
+          return fileStructure;
+        }
+      })
       .then(function (fileStructure) {
         var oldPath = fileInfo.path.split('/');
         console.log('oldPath: ', oldPath);
-        // check if old path exists using existing function
-        // delete property from the fileStructure object
-        // return the new fileStructure
-        // })
-        // .then(function (newFileStructure) {
-        //parse new path and convert to object notation
-        //pass into function below
-        // fileController._appendToFileStructure();
-        // })
-        //update file name in liveDB so that the name has the new path 
-        // .then(function () {
-        //save file contents in a variable
-        //use oldPath to delete the old file at the old path
-        //use the new path to save the file contents at the new path
-      });
+
+      })
+
+    // delete property from the fileStructure object
+    // return the new fileStructure
+    // })
+    // .then(function (newFileStructure) {
+    //parse new path and convert to object notation
+    //pass into function below
+    // fileController._appendToFileStructure();
+    // })
+    //update file name in liveDB so that the name has the new path 
+    // .then(function () {
+    //save file contents in a variable
+    //use oldPath to delete the old file at the old path
+    //use the new path to save the file contents at the new path
   }
 };
 
 module.exports = fileController;
+
+//////EXAMPLE TO USE IN JSFIDDLE TO TRAVERSE THE FILE STRUCTURE
+// var obj1 = {
+//     fileStructure:  {
+//         _id: '54adfd09936bc2112ddbfe88',
+//         project_id: 5,
+//         files: { 
+//             mainjs: { 
+//                 name: 'main.js',
+//                 created: '2015-01-07T19:01:04-08:00',
+//                 author: null,
+//                 type: 'file',
+//                 path: '//main.js' 
+//             },
+//             exampleFolder: { 
+//                 name: 'example',
+//                 created: '2015-01-07T19:01:12-08:00',
+//                 author: null,
+//                 type: 'folder',
+//                 path: '/example',
+//                 files: { 
+//                     carjs: { 
+//                         name: 'main.js',
+//                         created: '2015-01-07T19:01:04-08:00',
+//                         author: null,
+//                         type: 'file',
+//                         path: '//main.js' 
+//                     },
+//                     cowFolder: { 
+//                         name: 'example',
+//                         created: '2015-01-07T19:01:12-08:00',
+//                         author: null,
+//                         type: 'folder',
+//                         path: '/example',
+//                         files: {
+//                             cowjs: { 
+//                                 name: 'cow.js',
+//                                 created: '2015-01-07T19:01:04-08:00',
+//                                 author: null,
+//                                 type: 'file',
+//                                 path: '//main.js'
+//                             }
+//                         }
+//                     }
+//                 }
+//             },
+//             dummyForTest2js: { 
+//                 name: 'dummyForTest2.js',
+//                 created: '2015-01-07T19:01:39-08:00',
+//                 author: 4,
+//                 type: 'file',
+//                 path: '/dummyForTest2.js' 
+//             } 
+//         }
+//     }
+// }
+
+// var url1 = 'exampleFolder/cowFolder/cowjs';
+
+// var findObjectProperty = function (url, object){
+//     var baseObject = object.fileStructure.files;
+//     var urlToArray =  url.split('/');
+
+//     var deleteProperty = function(round, urlArray, obj, index){
+
+//         var totalRounds = urlArray.length;
+//         if(round == totalRounds){
+//             console.log(obj)
+//             delete obj[urlArray[index]];
+//             return;
+//         }
+//         var objToPass;
+//         if(obj.type === 'folder'){
+//             objToPass = obj[urlArray[index].files];
+//         }else if(obj.type === 'file'){
+//             objToPass = obj[urlArray[index]];    
+//         }else{
+//             console.log('Error traversing file. Check if file path exists.');
+//         }
+//         deleteProperty(round + 1, urlArray, obj[urlArray[index]], index + 1);
+//     }
+//     deleteProperty(1, urlToArray, baseObject, 0);
+// };
+
+// findObjectProperty(url1, obj1);
