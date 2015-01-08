@@ -326,28 +326,34 @@ module.exports = fileController;
 // var url1 = 'exampleFolder/cowFolder/cowjs';
 
 // var findObjectProperty = function (url, object){
-//     var baseObject = object.fileStructure.files;
+
 //     var urlToArray =  url.split('/');
+//     var baseObject = object.fileStructure.files[urlToArray[0]];
 
 //     var deleteProperty = function(round, urlArray, obj, index){
 
 //         var totalRounds = urlArray.length;
-//         if(round == totalRounds){
-//             console.log(obj)
-//             delete obj[urlArray[index]];
+//         if(round == totalRounds - 1){
+//             var objKey = urlArray[index];
+//             console.log(objKey);
+//             delete obj.files[objKey];
 //             return;
 //         }
 //         var objToPass;
+//         var objKey = urlArray[index];
 //         if(obj.type === 'folder'){
-//             objToPass = obj[urlArray[index].files];
+//             var temp = obj.files;
+//             objToPass = temp[objKey];
+//             console.log('objToPass', objToPass);
 //         }else if(obj.type === 'file'){
-//             objToPass = obj[urlArray[index]];    
+//             objToPass = obj[objKey];    
 //         }else{
 //             console.log('Error traversing file. Check if file path exists.');
 //         }
-//         deleteProperty(round + 1, urlArray, obj[urlArray[index]], index + 1);
+//         deleteProperty(round + 1, urlArray, objToPass, index + 1);
 //     }
-//     deleteProperty(1, urlToArray, baseObject, 0);
+//     deleteProperty(1, urlToArray, baseObject, 1);
 // };
 
 // findObjectProperty(url1, obj1);
+// console.log(obj1);
