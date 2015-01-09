@@ -48,10 +48,48 @@ describe('File', function () {
       .expect(201)
       .then(function (res) {
         var fileStructure = res.body;
+        // console.log('fileStructure in file.js 1: ', fileStructure);
         var fileKey = 'main.js'.replace('.', '');
         expect(fileStructure.files).to.be.a('object');
         expect(fileStructure.files[fileKey]).to.be.a('object');
         expect(fileStructure.files[fileKey].name).to.equal('main.js');
+        done();
+      });
+  });
+
+  it('nothing. Just adding some folders and files', function (done) {
+    agent
+      .post('/api/file')
+      .send({
+        project_name: project_name,
+        file_name: 'folders',
+        type: 'folder',
+        path: '/'
+      })
+      .end(function (err, res) {
+        if (err) {
+          console.log('Error adding a new file: ', err);
+        }
+        var fileStructure = res.body;
+        // console.log('fileStructure in file.js 2: ', fileStructure);
+        done();
+      });
+  });
+  it('nothing. Just adding some folders and files', function (done) {
+    agent
+      .post('/api/file')
+      .send({
+        project_name: project_name,
+        file_name: 'door.js',
+        type: 'file',
+        path: '/folders/'
+      })
+      .end(function (err, res) {
+        if (err) {
+          console.log('Error adding a new file 3: ', err);
+        }
+        var fileStructure = res.body;
+        // console.log('fileStructure in file.js: ', fileStructure.files.folders);
         done();
       });
   });
@@ -167,6 +205,7 @@ describe('File', function () {
       .expect(200)
       .then(function (res) {
         var project = res.body;
+        // console.log('project: ', project);
         var fileKey = 'main.js'.replace('.', '');
         project.should.have.property('id');
         project.should.have.property('files');
@@ -239,8 +278,8 @@ describe('File', function () {
       .send({
         projectIdOrName: project_name,
         type: 'file',
-        path: 'blah/blah/blahblah',
-        newPath: 'blahblahblahblahblah'
+        path: '/example/dummyForTest3.js',
+        newPath: '/indexjs/'
       })
       .expect(200)
       .end(function (err, res) {
@@ -248,6 +287,7 @@ describe('File', function () {
           console.log('Error moving file: ', err);
         }
         var file = res.body;
+        // console.log('res: ', res);
         // file.should.be.instanceof(Object);
         // file.should.have.property('id');
         // file.should.have.property('file_name');
