@@ -12,6 +12,9 @@ var uploadController = {
     var projectName;
     var documentName;
     var fileContent;
+    var file;
+    var path;
+    var type;
     var userId = req.user.get('id');
     var form = new multiparty.Form();
     // Upload file to mongo
@@ -45,11 +48,11 @@ var uploadController = {
                 console.log('Document Already Exists', err);
               })
               .then(function () { // err, version, transformedByOps, snapshot
-                 var fileInfo = {
+                var fileInfo = {
                   projectName: projectName,
                   fileName: documentName,
-                  type: 'file', ///need to make flexible to take folders too
-                  path: '',
+                  type: type, ///need to make flexible to take folders too
+                  path: path,
                   userId: userId
                 };
                 fileController._createNewFileOrFolder(fileInfo)
@@ -65,7 +68,7 @@ var uploadController = {
           .catch(function (err) {
             console.log('Error uploading file', err);
           });
-        });
+      });
     });
     form.parse(req, function (err, fields, file) {
       if (err) {
@@ -73,6 +76,8 @@ var uploadController = {
       }
       projectName = fields.project_name[0] || req.body.project_name;
       documentName = fields.file_name[0] || file.originalFilename;
+      path = fields.path[0];
+      type = fields.type[0];
     });
   }
 };
