@@ -175,12 +175,12 @@ describe('File', function () {
       .post('/api/file/upload')
       .field('file_name', 'dummyForTest2.js')
       .field('project_name', project_name)
-      .field('path', '/dummyForTest2js')
+      .field('path', '/dummyForTest2js') //changed this. was '' before
       .field('type', 'file')
       .attach('testFile', './server/tests/test-files/dummyForTest.js')
       .expect(201)
       .then(function (res) {
-        console.log('res.body: ', res.body);
+        // console.log('res.body: ', res.body);
         expect(res.body.files.dummyForTest2js).to.be.an('object');
         expect(res.body.files.dummyForTest2js.name).to.equal('dummyForTest2.js');
         done();

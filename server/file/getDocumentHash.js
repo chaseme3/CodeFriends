@@ -14,6 +14,8 @@ var Hashes = require('jshashes');
  * @return <Promise> -> <String> (documentHash)
  */
 var getDocumentHash = function (projectNameOrId, documentPath) {
+  console.log('projectNameOrId: ', projectNameOrId);
+  console.log('documentPath: ', documentPath);
   if (typeof documentPath !== 'string') throw new Error('Document Path is Not A String');
   return new Q()
     .then(function () {

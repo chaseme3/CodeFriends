@@ -17,10 +17,11 @@ var getProjectZip = function (projectNameOrId) {
     .then(function (_project) {
       project = _project;
       return getFileStructure(project.get('id'), project.get('project_name'))
-         .then(function (fileStructure) {
+        .then(function (fileStructure) {
           var paths = getPathsForFileStructure(fileStructure);
           return Q.allSettled(paths.map(function (path) {
-            return getFileContents(project, path)
+            // console.log('project: ', project);
+            return getFileContents(project.attributes.project_name, path) ////////!!!!!!!!!!! I think this is the issue!!!!!!!
               .then(function (fileContents) {
                 return {
                   path: path,
@@ -30,7 +31,7 @@ var getProjectZip = function (projectNameOrId) {
           }));
         });
     })
-    .then(function (allFileContents){
+    .then(function (allFileContents) {
       var projectArchive = new JSZip();
       var projectName = project.get('project_name');
       allFileContents.forEach(function (file) {
@@ -38,8 +39,14 @@ var getProjectZip = function (projectNameOrId) {
         var fileContents = file.value.fileContents;
         projectArchive.file(filePath, fileContents);
       });
-      var nodebuffer = projectArchive.generate({ type: 'nodebuffer', createFolders: true });
-      var str = projectArchive.generate({ type: 'string', createFolders: true });
+      var nodebuffer = projectArchive.generate({
+        type: 'nodebuffer',
+        createFolders: true
+      });
+      var str = projectArchive.generate({
+        type: 'string',
+        createFolders: true
+      });
       var zipPath = path.resolve(__dirname, '../', config.get('tmpDirectory'), projectName + '.zip');
       return fs.writeFileAsync(zipPath, nodebuffer)
         .then(function () {

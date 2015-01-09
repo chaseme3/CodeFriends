@@ -31,6 +31,7 @@ var fileController = {
       projectId: projectId,
       path: path
     };
+    console.log('fileInfo: ', fileInfo);
     if (type !== 'file' && type !== 'folder') {
       return res.status(400).send('Invalid File Type Specified').end();
     }
@@ -243,11 +244,12 @@ var fileController = {
     var fileContent;
     var isItValidUrl;
     var fileStructure;
-    downloadController._getFileContents(fileInfo.projectIdOrName, fileInfo.path)
+    downloadController._getFileContents(fileInfo.projectIdOrName, fileInfo.path);
+    console.log('fileInfo.path: ', fileInfo.path)
       .then(function (content) {
-        console.log('content: ', content);
+        // console.log('content: ', content);
         fileContent = content;
-        console.log('fileContent: ', fileContent);
+        // console.log('fileContent: ', fileContent);
       });
   }
 

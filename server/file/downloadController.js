@@ -27,7 +27,7 @@ var downloadController = {
     .then(function (documentHash) {
         return backend.fetchAsync('documents', documentHash)
           .then(function (file) {
-            // console.log('file: ', file);
+        // console.log('file: ', file);
             // If the file is empty or not found, create an empty file
             if (file.data === undefined) {
               return backend.submitAsync('documents', documentHash, {
@@ -37,6 +37,7 @@ var downloadController = {
                   }
                 })
                 .catch(function (err) {
+                  // it's getting stuck right here!!!!!!!!
                   console.log('Document Already Exists', err);
                 })
                 .then(function () {
