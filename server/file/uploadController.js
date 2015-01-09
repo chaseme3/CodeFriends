@@ -9,10 +9,11 @@ var getDocumentHash = require('../file/getDocumentHash');
 var uploadController = {
   uploadNewFile: function (req, res) {
     var size = '';
-    var projectName;
+    var projectName; //shouldn't these be req.projectname, etc.???
     var documentName;
     var fileContent;
     var type;
+    var path;
     var userId = req.user.get('id');
     var form = new multiparty.Form();
     // Upload file to mongo
@@ -50,7 +51,7 @@ var uploadController = {
                   projectName: projectName,
                   fileName: documentName,
                   type: type,
-                  path: '',
+                  path: path,
                   userId: userId
                 };
                 fileController._createNewFileOrFolder(fileInfo)
@@ -74,6 +75,9 @@ var uploadController = {
       }
       projectName = fields.project_name[0] || req.body.project_name;
       documentName = fields.file_name[0] || file.originalFilename;
+      path = fields.path[0];
+      console.log('path: ', path);
+
       type = fields.type[0];
     });
   }

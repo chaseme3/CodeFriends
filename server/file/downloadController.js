@@ -23,9 +23,11 @@ var downloadController = {
     if (!projectNameOrId) throw new Error('No Project Specified');
     if (typeof documentPath !== 'string') throw new Error('No Document Path Specified');
     return getDocumentHash(projectNameOrId, documentPath)
-      .then(function (documentHash) {
+
+    .then(function (documentHash) {
         return backend.fetchAsync('documents', documentHash)
           .then(function (file) {
+            // console.log('file: ', file);
             // If the file is empty or not found, create an empty file
             if (file.data === undefined) {
               return backend.submitAsync('documents', documentHash, {
@@ -45,6 +47,7 @@ var downloadController = {
           });
       })
       .then(function (fileContents) {
+        console.log('fileContents: ', fileContents);
         return fileContents;
       })
       .catch(function (err) {
