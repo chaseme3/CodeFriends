@@ -173,7 +173,7 @@ describe('File', function () {
   it('should add a new file to the database', function (done) {
     agent
       .post('/api/file/upload')
-      .field('file_name', 'dummyForTest2.js')
+      .field('file_name', 'dummyForTest2js')
       .field('project_name', project_name)
       .field('path', '/dummyForTest2js') //changed this. was '' before
       .field('type', 'file')

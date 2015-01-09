@@ -15,7 +15,8 @@ var Hashes = require('jshashes');
  */
 var getDocumentHash = function (projectNameOrId, documentPath) {
   console.log('projectNameOrId: ', projectNameOrId);
-  console.log('documentPath: ', documentPath);
+  console.log('edited documentPath: ', documentPath.replace('.', '')); //seeing if this would help fix it
+  documentPath = documentPath.replace('.', '');
   if (typeof documentPath !== 'string') throw new Error('Document Path is Not A String');
   return new Q()
     .then(function () {
