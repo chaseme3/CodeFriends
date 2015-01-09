@@ -26,6 +26,7 @@ describe('Upload', function () {
       .field('type', 'file')
       .attach('testFile', './server/tests/integration/dummyForTest.js')
       .then(function (res) {
+        // console.log('res in uploadTest!!!!!: ', res);
         expect(res.status).to.equal(200); // 'success' status
         done();
       });

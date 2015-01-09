@@ -7,6 +7,10 @@ var moment = require('moment');
 var _ = require('lodash');
 var ProjectCollection = require('../models').collections.ProjectCollection;
 // var Project = require('../models').models.Project;
+var backend = require('../liveDbClient');
+var getDocumentHash = require('../file/getDocumentHash');
+var _ = require('lodash');
+var downloadController = require('../download/downloadController');
 
 var mongoIndex = function (str) {
   return str.replace('.', '');
@@ -45,7 +49,7 @@ var fileController = {
     var type = fileInfo.type;
     var projectId = fileInfo.projectId || null;
     var path = fileInfo.path;
-    // var projectIdOrName = fileInfo.projectIdOrName;
+    var projectIdOrName = fileInfo.projectIdOrName;
     var userId = fileInfo.userId || null;
     return new Q()
       .then(function () {
@@ -69,7 +73,7 @@ var fileController = {
           author: userId,
           type: type,
           path: path + '/' + fileName,
-          // projectIdOrName: projectIdOrName
+          projectIdOrName: projectIdOrName
         };
         if (type === 'folder') {
           newAddition.files = {};
@@ -235,207 +239,123 @@ var fileController = {
   moveFileInProject: function (req, res) {
     var fileInfo = req.body;
     var fileContent;
+    console.log('fileInfo: ', fileInfo);
+    downloadController._getFileContents(fileInfo.projectIdOrName, fileInfo.path)
+      .then(function (content) {
+        fileContent = content;
+        console.log('fileContent: ', fileContent);
+      });
 
-    return fileController.getFileStructure(fileInfo.projectIdOrName)
-      .then(function (fileStructure) {
-        if (fileController._isPathValid(fileStructure, fileInfo.path)) {
-          return fileStructure;
-        }
-      })
-      .then(function (fileStructure) {
-        return fileController.moveObjectProperty(fileInfo.oldUrl, fileInfo.newUrl, fileStructure);
-      })
-      .then(function (newFileStructureToAdd) {
-        return fileController._updateFileStructure(newFileStructureToAdd);
-      })
-      .then()
-  },
+    //   return fileController.getFileStructure(fileInfo.projectIdOrName)
+    //     .then(function (fileStructure) {
+    //       if (fileController._isPathValid(fileStructure, fileInfo.path)) {
+    //         return fileStructure;
+    //       }
+    //     })
+    //     .then(function (fileStructure) {
+    //       return fileController.moveObjectProperty(fileInfo.oldUrl, fileInfo.newUrl, fileStructure);
+    //     })
+    //     .then(function (newFileStructureToAdd) {
+    //       return fileController._updateFileStructure(newFileStructureToAdd); //may not need return
+    //     })
+    //     .then(function () {
+    //       return getDocumentHash(projectName, documentName)
+    //         .then(function (documentHash) {
+    //           backend.submitAsync('documents', documentHash, {
+    //               create: {
+    //                 type: 'text',
+    //                 data: fileContent
+    //               }
+    //             })
+    //             .catch(function (err) {
+    //               console.log('Document Already Exists', err);
+    //             })
+    //             .then(function () { // err, version, transformedByOps, snapshot
+    //               var fileInfo = {
+    //                 projectName: projectName,
+    //                 fileName: documentName,
+    //                 type: type,
+    //                 path: '',
+    //                 userId: userId
+    //               };
+    //               fileController._createNewFileOrFolder(fileInfo)
+    //                 .then(function (newFileStructre) {
+    //                   res.json(newFileStructre);
+    //                 })
+    //                 .catch(function (err) {
+    //                   console.log('Error Creating File or Folder: ', err);
+    //                   res.status(400).end();
+    //                 });
+    //             });
+    //         })
+    //         .catch(function (err) {
+    //           console.log('Error uploading file', err);
+    //         });
+    //     })
+    // },
 
 
-  moveObjectProperty: function (oldUrl, newUrl, object) {
-    console.log('object at beginning: ', object);
+    // moveObjectProperty: function (oldUrl, newUrl, object) {
+    //   console.log('object at beginning: ', object);
 
-    var oldUrlArray = oldUrl.split('/');
-    var newUrlArray = newUrl.split('/');
-    var baseObject = object.fileStructure.files[oldUrlArray[0]];
-    var storageForFileToMove;
+    //   var oldUrlArray = oldUrl.split('/');
+    //   var newUrlArray = newUrl.split('/');
+    //   var baseObject = object.fileStructure.files[oldUrlArray[0]];
+    //   var storageForFileToMove;
 
-    var deleteProperty = function (round, urlArray, obj, index) {
-      var totalRounds = oldUrlArray.length - 1;
+    //   var deleteProperty = function (round, urlArray, obj, index) {
+    //     var totalRounds = oldUrlArray.length - 1;
 
-      if (round === totalRounds) {
-        var objKey = oldUrlArray[index];
-        storageForFileToMove = obj.files[objKey];
-        delete obj.files[objKey];
-        return;
-      }
-      var objToPass;
-      var objKey = oldUrlArray[index];
-      if (obj.type === 'folder') {
-        var temp = obj.files;
-        objToPass = temp[objKey];
-      } else if (obj.type === 'file') {
-        objToPass = obj[objKey];
-      } else {
-        console.log('Error traversing file. Check if file path exists.');
-      }
-      deleteProperty(round + 1, urlArray, objToPass, index + 1);
-    };
-    deleteProperty(1, oldUrlArray, baseObject, 1);
-    console.log('object after deleting property: ', object);
+    //     if (round === totalRounds) {
+    //       var objKey = oldUrlArray[index];
+    //       storageForFileToMove = obj.files[objKey];
+    //       delete obj.files[objKey];
+    //       return;
+    //     }
+    //     var objToPass;
+    //     var objKey = oldUrlArray[index];
+    //     if (obj.type === 'folder') {
+    //       var temp = obj.files;
+    //       objToPass = temp[objKey];
+    //     } else if (obj.type === 'file') {
+    //       objToPass = obj[objKey];
+    //     } else {
+    //       console.log('Error traversing file. Check if file path exists.');
+    //     }
+    //     deleteProperty(round + 1, urlArray, objToPass, index + 1);
+    //   };
+    //   deleteProperty(1, oldUrlArray, baseObject, 1);
+    //   console.log('object after deleting property: ', object);
 
-    var addProperty = function (round, urlArray, obj, index) {
-      var totalRounds = urlArray.length - 1;
+    //   var addProperty = function (round, urlArray, obj, index) {
+    //     var totalRounds = urlArray.length - 1;
 
-      if (round === totalRounds) {
-        var objKey = urlArray[index];
-        console.log('obj in base case of addProperty: ', obj);
-        console.log('objKey: ', objKey);
-        console.log('property we are adding: ', storageForFileToMove);
-        obj.files[objKey] = storageForFileToMove;
-        return;
-      }
+    //     if (round === totalRounds) {
+    //       var objKey = urlArray[index];
+    //       console.log('obj in base case of addProperty: ', obj);
+    //       console.log('objKey: ', objKey);
+    //       console.log('property we are adding: ', storageForFileToMove);
+    //       obj.files[objKey] = storageForFileToMove;
+    //       return;
+    //     }
 
-      var objToPass;
-      var objKey = urlArray[index];
-      if (obj.type === 'folder') {
-        var temp = obj.files;
-        objToPass = temp[objKey];
-      } else if (obj.type === 'file') {
-        objToPass = obj[objKey];
-      } else {
-        console.log('Error traversing file. Check if file path exists.');
-      }
-      addProperty(round + 1, urlArray, objToPass, index + 1);
-    };
-    addProperty(1, newUrlArray, baseObject, 1);
-    console.log('object after adding property: ', object);
+    //     var objToPass;
+    //     var objKey = urlArray[index];
+    //     if (obj.type === 'folder') {
+    //       var temp = obj.files;
+    //       objToPass = temp[objKey];
+    //     } else if (obj.type === 'file') {
+    //       objToPass = obj[objKey];
+    //     } else {
+    //       console.log('Error traversing file. Check if file path exists.');
+    //     }
+    //     addProperty(round + 1, urlArray, objToPass, index + 1);
+    //   };
+    //   addProperty(1, newUrlArray, baseObject, 1);
+    //   console.log('object after adding property: ', object);
 
-    return object.fileStructure;
+    //   return object.fileStructure;
   }
-
 };
 
 module.exports = fileController;
-
-// var obj1 = {
-//     fileStructure:  {
-//         _id: '54adfd09936bc2112ddbfe88',
-//         project_id: 5,
-//         files: { 
-//             mainjs: { 
-//                 name: 'main.js',
-//                 created: '2015-01-07T19:01:04-08:00',
-//                 author: null,
-//                 type: 'file',
-//                 path: '//main.js' 
-//             },
-//             exampleFolder: { 
-//                 name: 'exampleFolder',
-//                 created: '2015-01-07T19:01:12-08:00',
-//                 author: null,
-//                 type: 'folder',
-//                 path: '/example',
-//                 files: { 
-//                     carjs: { 
-//                         name: 'main.js',
-//                         created: '2015-01-07T19:01:04-08:00',
-//                         author: null,
-//                         type: 'file',
-//                         path: '//main.js' 
-//                     },
-//                     cowFolder: { 
-//                         name: 'cowFolder',
-//                         created: '2015-01-07T19:01:12-08:00',
-//                         author: null,
-//                         type: 'folder',
-//                         path: '/example',
-//                         files: {
-//                             cowjs: { 
-//                                 name: 'cow.js',
-//                                 created: '2015-01-07T19:01:04-08:00',
-//                                 author: null,
-//                                 type: 'file',
-//                                 path: '//main.js'
-//                             }
-//                         }
-//                     }
-//                 }
-//             },
-//             dummyForTest2js: { 
-//                 name: 'dummyForTest2.js',
-//                 created: '2015-01-07T19:01:39-08:00',
-//                 author: 4,
-//                 type: 'file',
-//                 path: '/dummyForTest2.js' 
-//             } 
-//         }
-//     }
-// }
-
-// var url1 = 'exampleFolder/cowFolder/cowjs';
-// var url2 = 'exampleFolder/cowjs';
-
-// var moveObjectProperty = function (oldUrl, newUrl, object){
-//     console.log('object at beginning: ', object);
-
-//     var oldUrlArray =  oldUrl.split('/');
-//     var newUrlArray =  newUrl.split('/');
-//     var baseObject = object.fileStructure.files[oldUrlArray[0]];
-//     var storageForFileToMove;
-
-//     var deleteProperty = function(round, urlArray, obj, index){
-//         var totalRounds = oldUrlArray.length -1;
-
-//         if(round === totalRounds){
-//             var objKey = oldUrlArray[index];
-//             storageForFileToMove = obj.files[objKey];
-//             delete obj.files[objKey];
-//             return;
-//         }        
-//         var objToPass;
-//         var objKey = oldUrlArray[index];
-//         if(obj.type === 'folder'){
-//             var temp = obj.files;
-//             objToPass = temp[objKey];
-//         }else if(obj.type === 'file'){
-//             objToPass = obj[objKey];    
-//         }else{
-//             console.log('Error traversing file. Check if file path exists.');
-//         }
-//         deleteProperty(round + 1, urlArray, objToPass, index + 1);
-//     }
-//     deleteProperty(1, oldUrlArray, baseObject, 1);
-//     console.log('object after deleting property: ', object);
-
-//     var addProperty = function(round, urlArray, obj, index){
-//         var totalRounds = urlArray.length -1;
-
-//         if(round === totalRounds){
-//             var objKey = urlArray[index];
-//             console.log('obj in base case of addProperty: ', obj);
-//             console.log('objKey: ', objKey);
-//             console.log('property we are adding: ', storageForFileToMove);
-//             obj.files[objKey] = storageForFileToMove;
-//             return;
-//         }
-
-//         var objToPass;
-//         var objKey = urlArray[index];
-//         if(obj.type === 'folder'){
-//             var temp = obj.files;
-//             objToPass = temp[objKey];
-//         }else if(obj.type === 'file'){
-//             objToPass = obj[objKey];    
-//         }else{
-//             console.log('Error traversing file. Check if file path exists.');
-//         }
-//         addProperty(round + 1, urlArray, objToPass, index + 1);
-//     }
-//     addProperty(1, newUrlArray, baseObject, 1);
-//     console.log('object after adding property: ', object);
-//     return object;
-
-// };
-
-// console.log(moveObjectProperty(url1, url2, obj1));
