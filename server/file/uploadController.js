@@ -36,8 +36,11 @@ var uploadController = {
          * This currently doesn't support paths (it should)
          * Remove the '/' in that string and replace it with proper paths
          */
+        console.log('UPLOAD CONTROLLER projectName: ', projectName);
+        console.log('UPLOAD CONTROLLER documentName: ', documentName);
         return getDocumentHash(projectName, documentName)
           .then(function (documentHash) {
+            console.log('UPLOAD CONTROLLER documentHash: ', documentHash);
             backend.submitAsync('documents', documentHash, {
                 create: {
                   type: 'text',
@@ -50,7 +53,7 @@ var uploadController = {
               .then(function () { // err, version, transformedByOps, snapshot
                 var fileInfo = {
                   projectName: projectName,
-                  fileName: documentName,
+                  fileName: path,
                   type: type, ///need to make flexible to take folders too
                   path: path,
                   userId: userId
@@ -75,8 +78,9 @@ var uploadController = {
         console.log('err: ', err);
       }
       projectName = fields.project_name[0] || req.body.project_name;
-      documentName = fields.file_name[0] || file.originalFilename;
+      documentName = fields.path[0] || file.originalFilename;
       path = fields.path[0];
+      console.log('PATH: ', path);
       type = fields.type[0];
     });
   }
