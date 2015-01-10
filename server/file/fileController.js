@@ -238,6 +238,7 @@ var fileController = {
     return filePaths;
   },
   moveFileInProject: function (req, res) {
+    console.log('hello!!!!');
     var fileInfo = req.body;
     var fileContent;
     var isItValidUrl;
