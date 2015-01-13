@@ -9,6 +9,7 @@ var path = require('path');
 
 var ProjectCollection = require('../models').collections.ProjectCollection;
 var downloadController = require('./downloadController');
+var uploadController = require('./uploadController');
 // var Project = require('../models').models.Project;
 
 var mongoIndex = function (str) {
@@ -287,7 +288,10 @@ var fileController = {
         return fileController._updateFileStructure(newFileStructureToAdd);
       })
       .then(function (newFileStructre) {
-        console.log('newFileStructre: ', newFileStructre);
+        uploadController._addFileWithContentToProject(fileInfo.projectName, newPath, req.user.id, fileContent);
+      })
+      .then(function () {
+        console.log('it is finished.');
       })
       .catch(function (err) {
         console.log('Hello World #1', err);
