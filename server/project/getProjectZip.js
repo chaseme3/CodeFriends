@@ -16,8 +16,14 @@ var getProjectZip = function (projectNameOrId) {
   return getProject(projectNameOrId)
     .then(function (_project) {
       project = _project;
-      return getFileStructure(project.get('id'), project.get('projectName'))
-         .then(function (fileStructure) {
+      var temp;
+      if (project.get('projectName')) {
+        temp = project.get('projectName');
+      } else if (project.get('id')) {
+        temp = project.get('id');
+      }
+      return getFileStructure(temp)
+        .then(function (fileStructure) {
           var paths = getPathsForFileStructure(fileStructure);
           return Q.allSettled(paths.map(function (path) {
             return getFileContents(project, path)
@@ -30,7 +36,7 @@ var getProjectZip = function (projectNameOrId) {
           }));
         });
     })
-    .then(function (allFileContents){
+    .then(function (allFileContents) {
       var projectArchive = new JSZip();
       var projectName = project.get('projectName');
       allFileContents.forEach(function (file) {
@@ -38,7 +44,10 @@ var getProjectZip = function (projectNameOrId) {
         var fileContents = file.value.fileContents;
         projectArchive.folder(projectName).file(filePath, fileContents);
       });
-      var nodebuffer = projectArchive.generate({ type: 'nodebuffer', createFolders: true });
+      var nodebuffer = projectArchive.generate({
+        type: 'nodebuffer',
+        createFolders: true
+      });
       var zipPath = path.resolve(__dirname, '../', config.get('tmpDirectory'), projectName + '.zip');
       return fs.writeFileAsync(zipPath, nodebuffer)
         .then(function () {

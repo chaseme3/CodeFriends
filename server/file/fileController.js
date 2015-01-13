@@ -53,7 +53,13 @@ var fileController = {
         }
       })
       .then(function () {
-        return fileController.getFileStructure(projectId, projectName);
+        var temp;
+        if (projectName) {
+          temp = projectName;
+        } else {
+          temp = projectId;
+        }
+        return fileController.getFileStructure(temp);
       })
       .then(function (fileStructure) {
         // Check if path exists
@@ -167,29 +173,38 @@ var fileController = {
   },
   get: function (req, res) {
     var projectName = req.body.projectName;
-    return fileController.getFileStructure(null, projectName)
+    return fileController.getFileStructure(projectName)
       .then(function (fileStructure) {
         return res.json(fileStructure);
       });
   },
-  getFileStructure: function (projectId, projectName) {
-    console.log('projectId: ', projectId);
-    console.log('projectName: ', projectName);
+  getFileStructure: function (projectIdOrName) {
     return new Q().then(function () {
-        if (projectId !== null && projectId !== undefined) { // If project ID
-          // Check if project ID exists
+        if (typeof projectIdOrName === 'string') {
           return ProjectCollection
-            .query('where', 'id', '=', projectId)
+            .query('where', 'project_name', '=', projectIdOrName)
             .fetchOne();
+        } else if (typeof projectIdOrName === 'number') {
+          return ProjectCollection
+            .query('where', 'id', '=', projectIdOrName)
+            .fetchOne();
+        } else {
+          throw new Error('No Project ID or name specified');
         }
+        // if (projectId !== null && projectId !== undefined) { // If project ID
+        //   // Check if project ID exists
+        //   return ProjectCollection
+        //     .query('where', 'id', '=', projectId)
+        //     .fetchOne();
+        // }
         // If project name
-        if (projectName !== null && projectName !== undefined) {
-          // Get project ID
-          return ProjectCollection
-            .query('where', 'project_name', '=', projectName)
-            .fetchOne();
-        }
-        throw new Error('No Project ID or name specified');
+        // if (projectName !== null && projectName !== undefined) {
+        //   // Get project ID
+        //   return ProjectCollection
+        //     .query('where', 'project_name', '=', projectName)
+        //     .fetchOne();
+        // }
+        // throw new Error('No Project ID or name specified');
       })
       .then(function (project) {
         // Get project structure form mongo
@@ -254,7 +269,7 @@ var fileController = {
         console.log('Error moving the file: ', err);
       });
 
-    return fileController.getFileStructure(null, fileInfo.projectIdOrName)
+    return fileController.getFileStructure(fileInfo.projectIdOrName)
       .then(function (currentFileStructure) {
         // console.log('currentFileStructure: ', currentFileStructure);
         fileStructure = currentFileStructure;
@@ -269,7 +284,10 @@ var fileController = {
       })
       .then(function (newFileStructureToAdd) {
         console.log('newFileStructureToAdd: ', newFileStructureToAdd);
-        // return fileController._updateFileStructure(newFileStructureToAdd); //may not need return
+        return fileController._updateFileStructure(newFileStructureToAdd);
+      })
+      .then(function (newFileStructre) {
+        console.log('newFileStructre: ', newFileStructre);
       })
       .catch(function (err) {
         console.log('Hello World #1', err);
